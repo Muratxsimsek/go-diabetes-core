@@ -1,4 +1,6 @@
 FROM golang:latest AS builder
+
+RUN mkdir /app
 ADD . /app
 WORKDIR /app
 #RUN go get -d -v
