@@ -12,8 +12,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    steps:
+    steps:    
     - uses: actions/checkout@v2
+    - name: Output Run Number
+      run: echo ${{ github.run_number }}
     - name: Docker Login
       env:
         DOCKER_USER : ${{ secrets.DOCKER_USER }}
