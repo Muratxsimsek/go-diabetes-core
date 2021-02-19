@@ -22,13 +22,9 @@ jobs:
         DOCKER_PASS : ${{ secrets.DOCKER_PASS }}
       run: docker login -u $DOCKER_USER -p $DOCKER_PASS  
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag muratxsimsek/go-diabetes-core:${{ github.run_number }}
+      run: docker build . --file Dockerfile --tag muratxsimsek/go-diabetes-core:${{ github.run_number }} --tag muratxsimsek/go-diabetes-core:latest        
     - name: Push Docker Image
-      run: docker push muratxsimsek/go-diabetes-core:${{ github.run_number }}
-    - name: Deploy to swarm
-      uses: sagebind/docker-swarm-deploy-action@v2
-      with:
-        remote_host: ssh://root@161.35.222.124
-        ssh_private_key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
-        ssh_public_key: ${{ secrets.DOCKER_SSH_PUBLIC_KEY }}
-        args: stack deploy --compose-file docker-compose.yml diabetes
+      run:
+        docker push muratxsimsek/go-diabetes-core:${{ github.run_number }}
+        docker push muratxsimsek/go-diabetes-core:latest
+
