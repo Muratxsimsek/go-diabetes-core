@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker Login
+      env:
+        DOCKER_USER : ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS : ${{ secrets.DOCKER_PASS }}
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASS  
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag muratxsimsek/go-diabetes-core:$(date +%s)
