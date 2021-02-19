@@ -18,8 +18,8 @@ jobs:
       run: echo ${{ github.run_number }}
     - name: Docker Login
       env:
-        DOCKER_USER : ${{ secrets.DOCKER_USER }}
-        DOCKER_PASS : ${{ secrets.DOCKER_PASS }}
+        DOCKER_USER : ${{ DOCKER_USER }}
+        DOCKER_PASS : ${{ DOCKER_PASS }}
       run: docker login -u $DOCKER_USER -p $DOCKER_PASS  
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag muratxsimsek/go-diabetes-core:${{ github.run_number }} --tag muratxsimsek/go-diabetes-core:snapshot        
