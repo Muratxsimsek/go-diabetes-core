@@ -24,7 +24,7 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag muratxsimsek/go-diabetes-core:${{ github.run_number }} --tag muratxsimsek/go-diabetes-core:latest        
     - name: Push Docker Image
-      run:
+      run: |
         docker push muratxsimsek/go-diabetes-core:${{ github.run_number }}
         docker push muratxsimsek/go-diabetes-core:latest
 
