@@ -22,4 +22,4 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag muratxsimsek/go-diabetes-core:$(date +%s)
     - name: Push Docker Image
-      run: docker push --tag muratxsimsek/go-diabetes-core:$(date +%s)      
+      run: docker push muratxsimsek/go-diabetes-core:$(date +%s)      
