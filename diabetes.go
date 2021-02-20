@@ -7,7 +7,7 @@ import (
 
 type Diabetes struct {
 	_ID          primitive.ObjectID
-	SugarValue   int8
+	SugarValue   int16
 	HungerStatus string
 	SugarDate    time.Time
 }
