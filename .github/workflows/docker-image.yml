@@ -27,4 +27,12 @@ jobs:
       run: |
         docker push muratxsimsek/go-diabetes-core:${{ github.run_number }}
         docker push muratxsimsek/go-diabetes-core:snapshot
-
+    - name: Deploy to swarm
+      uses: garygrossgarten/github-action-ssh@release
+      with:
+        command: docker service update --force diabetes_go-diabetes-core --image muratxsimsek/go-diabetes-core:snapshot
+        host: ${{ secrets.HOST }}
+        username: root
+        passphrase: ${{ secrets.PASSPHRASE }}
+        privateKey: ${{ secrets.PRIVATE_KEY}}   
+      
