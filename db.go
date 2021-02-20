@@ -68,7 +68,7 @@ func GetAllDiabetes() ([]*Diabetes, error) {
 	collection := client.Database("diabetes").Collection("diabetes")
 
 	findOptions := options.Find()
-	findOptions.SetLimit(2)
+	//findOptions.SetLimit(2)
 
 	cursor, err := collection.Find(context.TODO(), bson.D{{}}, findOptions)
 	if err != nil {
