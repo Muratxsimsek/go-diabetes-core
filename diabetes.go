@@ -6,8 +6,8 @@ import (
 )
 
 type Diabetes struct {
-	_ID          primitive.ObjectID
-	SugarValue   int16
-	HungerStatus string
-	SugarDate    time.Time
+	ID           primitive.ObjectID `bson:"_id" json:"_id"`
+	SugarValue   int16              `bson:"sugarValue" json:"sugarValue"`
+	HungerStatus string             `bson:"hungerStatus" json:"hungerStatus"`
+	SugarDate    time.Time          `bson:"sugarDate" json:"sugarDate"`
 }

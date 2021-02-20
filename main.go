@@ -2,33 +2,71 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
-//func handleGetDiabetes(c *gin.Context) {
-//	var diabetesList []Diabetes
-//	var diabetes Diabetes
-//	diabetes.HungerStatus = "FASTING"
-//	diabetes.SugarValue = 123
-//
-//	diabetesList = append(diabetesList, diabetes)
-//	c.JSON(http.StatusOK, gin.H{"all diabetes": diabetesList})
-//}
+func main() {
 
-func handleGetDiabetes(c *gin.Context) {
+	router := gin.Default()
+	router.GET("/diabetes", handleGetDiabetesList)
+	router.GET("/diabetes/:id", handleGetDiabetes)
+	router.POST("/diabetes/", handleCreateDiabetes)
+	router.PUT("/diabetes/:id", handleUpdateDiabetes)
+
+	router.Run(":8099")
+}
+
+func handleGetDiabetesList(c *gin.Context) {
 	var diabetesList, err = GetAllDiabetes()
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"diabetes": diabetesList})
+	c.JSON(http.StatusOK, gin.H{"data": diabetesList})
 }
 
-func main() {
+func handleGetDiabetes(c *gin.Context) {
+	id := c.Param("id")
+	//if id != nil {
+	//	c.JSON(http.StatusBadRequest, gin.H{"msg": err})
+	//	return
+	//}
+	var savedDiabetes, err = GetDiabetesByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"msg": err})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": savedDiabetes})
+}
 
-	router := gin.Default()
-	router.GET("/diabetes", handleGetDiabetes)
-	//router.POST("/users", controllers.UsersController.Save)
+func handleCreateDiabetes(c *gin.Context) {
+	var diabetes Diabetes
+	if err := c.ShouldBindJSON(&diabetes); err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
+		return
+	}
+	id, err := CreateDiabetes(&diabetes)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"id": id})
+}
 
-	router.Run(":8099")
+func handleUpdateDiabetes(c *gin.Context) {
+	id := c.Param("id")
+	var diabetes Diabetes
+	if err := c.ShouldBindJSON(&diabetes); err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
+		return
+	}
+	upsertedID, err := UpdateDiabetes(id, &diabetes)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": upsertedID})
 }
