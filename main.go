@@ -22,7 +22,7 @@ func main() {
 
 	router.GET("/diabetes", handleGetDiabetesList)
 	router.GET("/diabetes/:id", handleGetDiabetes)
-	router.POST("/diabetes/", handleCreateDiabetes)
+	router.POST("/diabetes", handleCreateDiabetes)
 	router.PUT("/diabetes/:id", handleUpdateDiabetes)
 
 	router.Run(":8099")
