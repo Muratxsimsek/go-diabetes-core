@@ -141,3 +141,64 @@ func UpdateDiabetes(id string, diabetes *Diabetes) (interface{}, error) {
 
 	return updatedDiabetes.ID, nil
 }
+
+func GetDiabetesChart() (*DiabetesChart, error) {
+	var diabetesChart DiabetesChart
+	var diabetesList []*Diabetes
+
+	client, ctx, cancel := getConnection()
+	defer cancel()
+	defer client.Disconnect(ctx)
+	collection := client.Database("diabetes").Collection("diabetes")
+
+	findOptions := options.Find()
+	findOptions.SetSort(bson.D{{"sugarDate", -1}})
+	//findOptions.SetLimit(2)
+
+	cursor, err := collection.Find(context.TODO(), bson.D{{}}, findOptions)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer cursor.Close(ctx)
+
+	//for cursor.Next(ctx) {
+	//	var row bson.M
+	//	if err = cursor.Decode(&row); err != nil {
+	//		log.Fatal(err)
+	//	}
+	//	//fmt.Println(row)
+	//
+	//}
+
+	err = cursor.All(ctx, &diabetesList)
+	if err != nil {
+		log.Printf("Failed marshalling %v", err)
+		return nil, err
+	}
+
+	for _, row := range diabetesList {
+		diabetesChart.SugarValues = append(diabetesChart.SugarValues, row.SugarValue)
+		diabetesChart.Dates = append(diabetesChart.Dates, row.SugarDate.UnixNano()/1000000)
+		//log.Println(row)
+	}
+
+	min, max := FindMaxAndMin(diabetesChart.SugarValues)
+	diabetesChart.MinSugarValue = min
+	diabetesChart.MaxSugarValue = max
+	//log.Println(time.Now().UnixNano() / 1000000)
+	return &diabetesChart, nil
+}
+
+func FindMaxAndMin(list []int16) (min int16, max int16) {
+	min = list[0]
+	max = list[0]
+	for _, el := range list {
+		if el > max {
+			max = el
+		}
+		if el < min {
+			min = el
+		}
+	}
+	return min, max
+}

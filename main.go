@@ -25,7 +25,19 @@ func main() {
 	router.POST("/diabetes", handleCreateDiabetes)
 	router.PUT("/diabetes/:id", handleUpdateDiabetes)
 
+	router.GET("/diabetes-chart", handleGetDiabetesChart)
+
 	router.Run(":8099")
+}
+
+func handleGetDiabetesChart(c *gin.Context) {
+	var diabetesChart, err = GetDiabetesChart()
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"msg": err})
+		return
+	}
+	//c.JSON(http.StatusOK, gin.H{"data": diabetesList})
+	c.JSON(http.StatusOK, diabetesChart)
 }
 
 func handleGetDiabetesList(c *gin.Context) {
