@@ -167,38 +167,49 @@ func GetDiabetesChart() (*DiabetesChart, error) {
 		return nil, err
 	}
 
+	var min int16 = diabetesList[0].SugarValue
+	var max int16 = diabetesList[0].SugarValue
+
 	for _, row := range diabetesList {
-		diabetesChart.TotalDiabetesChart.SugarValues = append(diabetesChart.TotalDiabetesChart.SugarValues, row.SugarValue)
-		diabetesChart.TotalDiabetesChart.Dates = append(diabetesChart.TotalDiabetesChart.Dates, row.SugarDate.UnixNano()/1000000)
+
+		if row.SugarValue < min {
+			min = row.SugarValue
+		}
+		if row.SugarValue > max {
+			max = row.SugarValue
+		}
+		diabetesChart.TotalDiabetesChart = append(diabetesChart.TotalDiabetesChart, TotalDiabetesChart{row.SugarDate.UnixNano() / 1000000, row.SugarValue})
 		if row.HungerStatus == "FASTING" {
-			diabetesChart.FastingDiabetesChart.SugarValues = append(diabetesChart.FastingDiabetesChart.SugarValues, row.SugarValue)
+			diabetesChart.FastingDiabetesChart = append(diabetesChart.FastingDiabetesChart, FastingDiabetesChart{row.SugarDate.UnixNano() / 1000000, row.SugarValue})
 		}
 		if row.HungerStatus == "EATING" {
-			diabetesChart.EatingDiabetesChart.SugarValues = append(diabetesChart.EatingDiabetesChart.SugarValues, row.SugarValue)
+			diabetesChart.EatingDiabetesChart = append(diabetesChart.EatingDiabetesChart, EatingDiabetesChart{row.SugarDate.UnixNano() / 1000000, row.SugarValue})
 		}
 		if row.HungerStatus == "OTHER" {
-			diabetesChart.OtherDiabetesChart.SugarValues = append(diabetesChart.OtherDiabetesChart.SugarValues, row.SugarValue)
+			diabetesChart.OtherDiabetesChart = append(diabetesChart.OtherDiabetesChart, OtherDiabetesChart{row.SugarDate.UnixNano() / 1000000, row.SugarValue})
 		}
+		//diabetesChart.TotalDiabetesChart.SugarValues = append(diabetesChart.TotalDiabetesChart.SugarValues, row.SugarValue)
+		//diabetesChart.TotalDiabetesChart.Dates = append(diabetesChart.TotalDiabetesChart.Dates, row.SugarDate.UnixNano()/1000000)
+		//if row.HungerStatus == "FASTING" {
+		//	diabetesChart.FastingDiabetesChart.SugarValues = append(diabetesChart.FastingDiabetesChart.SugarValues, row.SugarValue)
+		//} else {
+		//	diabetesChart.FastingDiabetesChart.SugarValues = append(diabetesChart.FastingDiabetesChart.SugarValues, 84)
+		//}
+		//if row.HungerStatus == "EATING" {
+		//	diabetesChart.EatingDiabetesChart.SugarValues = append(diabetesChart.EatingDiabetesChart.SugarValues, row.SugarValue)
+		//} else {
+		//	diabetesChart.EatingDiabetesChart.SugarValues = append(diabetesChart.EatingDiabetesChart.SugarValues, 84)
+		//}
+		//if row.HungerStatus == "OTHER" {
+		//	diabetesChart.OtherDiabetesChart.SugarValues = append(diabetesChart.OtherDiabetesChart.SugarValues, row.SugarValue)
+		//} else {
+		//	diabetesChart.OtherDiabetesChart.SugarValues = append(diabetesChart.OtherDiabetesChart.SugarValues, 84)
+		//}
 
 	}
 
-	min, max := FindMaxAndMin(diabetesChart.TotalDiabetesChart.SugarValues)
 	diabetesChart.MinSugarValue = min
 	diabetesChart.MaxSugarValue = max
 
 	return &diabetesChart, nil
-}
-
-func FindMaxAndMin(list []int16) (min int16, max int16) {
-	min = list[0]
-	max = list[0]
-	for _, el := range list {
-		if el > max {
-			max = el
-		}
-		if el < min {
-			min = el
-		}
-	}
-	return min, max
 }
