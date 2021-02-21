@@ -12,7 +12,8 @@ func main() {
 	router := gin.Default()
 
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"*"}
+	//config.AllowOrigins = []string{"*"}
+	config.AllowAllOrigins = true
 	config.AllowCredentials = true
 	config.AllowHeaders = []string{"Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"}
 	config.AllowMethods = []string{"POST, OPTIONS, GET, PUT"}
