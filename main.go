@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -9,6 +10,15 @@ import (
 func main() {
 
 	router := gin.Default()
+
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"*"}
+	config.AllowCredentials = true
+	config.AllowHeaders = []string{"Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"}
+	config.AllowMethods = []string{"POST, OPTIONS, GET, PUT"}
+
+	router.Use(cors.New(config))
+
 	router.GET("/diabetes", handleGetDiabetesList)
 	router.GET("/diabetes/:id", handleGetDiabetes)
 	router.POST("/diabetes/", handleCreateDiabetes)
@@ -23,7 +33,8 @@ func handleGetDiabetesList(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": diabetesList})
+	//c.JSON(http.StatusOK, gin.H{"data": diabetesList})
+	c.JSON(http.StatusOK, diabetesList)
 }
 
 func handleGetDiabetes(c *gin.Context) {
@@ -37,7 +48,8 @@ func handleGetDiabetes(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": savedDiabetes})
+	//c.JSON(http.StatusOK, gin.H{"data": savedDiabetes})
+	c.JSON(http.StatusOK, savedDiabetes)
 }
 
 func handleCreateDiabetes(c *gin.Context) {
