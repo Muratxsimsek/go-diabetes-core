@@ -161,15 +161,6 @@ func GetDiabetesChart() (*DiabetesChart, error) {
 	}
 	defer cursor.Close(ctx)
 
-	//for cursor.Next(ctx) {
-	//	var row bson.M
-	//	if err = cursor.Decode(&row); err != nil {
-	//		log.Fatal(err)
-	//	}
-	//	//fmt.Println(row)
-	//
-	//}
-
 	err = cursor.All(ctx, &diabetesList)
 	if err != nil {
 		log.Printf("Failed marshalling %v", err)
@@ -177,15 +168,24 @@ func GetDiabetesChart() (*DiabetesChart, error) {
 	}
 
 	for _, row := range diabetesList {
-		diabetesChart.SugarValues = append(diabetesChart.SugarValues, row.SugarValue)
-		diabetesChart.Dates = append(diabetesChart.Dates, row.SugarDate.UnixNano()/1000000)
-		//log.Println(row)
+		diabetesChart.TotalDiabetesChart.SugarValues = append(diabetesChart.TotalDiabetesChart.SugarValues, row.SugarValue)
+		diabetesChart.TotalDiabetesChart.Dates = append(diabetesChart.TotalDiabetesChart.Dates, row.SugarDate.UnixNano()/1000000)
+		if row.HungerStatus == "FASTING" {
+			diabetesChart.FastingDiabetesChart.SugarValues = append(diabetesChart.FastingDiabetesChart.SugarValues, row.SugarValue)
+		}
+		if row.HungerStatus == "EATING" {
+			diabetesChart.EatingDiabetesChart.SugarValues = append(diabetesChart.EatingDiabetesChart.SugarValues, row.SugarValue)
+		}
+		if row.HungerStatus == "OTHER" {
+			diabetesChart.OtherDiabetesChart.SugarValues = append(diabetesChart.OtherDiabetesChart.SugarValues, row.SugarValue)
+		}
+
 	}
 
-	min, max := FindMaxAndMin(diabetesChart.SugarValues)
+	min, max := FindMaxAndMin(diabetesChart.TotalDiabetesChart.SugarValues)
 	diabetesChart.MinSugarValue = min
 	diabetesChart.MaxSugarValue = max
-	//log.Println(time.Now().UnixNano() / 1000000)
+
 	return &diabetesChart, nil
 }
 
