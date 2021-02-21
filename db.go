@@ -188,23 +188,6 @@ func GetDiabetesChart() (*DiabetesChart, error) {
 		if row.HungerStatus == "OTHER" {
 			diabetesChart.OtherDiabetesChart = append(diabetesChart.OtherDiabetesChart, OtherDiabetesChart{row.SugarDate.UnixNano() / 1000000, row.SugarValue})
 		}
-		//diabetesChart.TotalDiabetesChart.SugarValues = append(diabetesChart.TotalDiabetesChart.SugarValues, row.SugarValue)
-		//diabetesChart.TotalDiabetesChart.Dates = append(diabetesChart.TotalDiabetesChart.Dates, row.SugarDate.UnixNano()/1000000)
-		//if row.HungerStatus == "FASTING" {
-		//	diabetesChart.FastingDiabetesChart.SugarValues = append(diabetesChart.FastingDiabetesChart.SugarValues, row.SugarValue)
-		//} else {
-		//	diabetesChart.FastingDiabetesChart.SugarValues = append(diabetesChart.FastingDiabetesChart.SugarValues, 84)
-		//}
-		//if row.HungerStatus == "EATING" {
-		//	diabetesChart.EatingDiabetesChart.SugarValues = append(diabetesChart.EatingDiabetesChart.SugarValues, row.SugarValue)
-		//} else {
-		//	diabetesChart.EatingDiabetesChart.SugarValues = append(diabetesChart.EatingDiabetesChart.SugarValues, 84)
-		//}
-		//if row.HungerStatus == "OTHER" {
-		//	diabetesChart.OtherDiabetesChart.SugarValues = append(diabetesChart.OtherDiabetesChart.SugarValues, row.SugarValue)
-		//} else {
-		//	diabetesChart.OtherDiabetesChart.SugarValues = append(diabetesChart.OtherDiabetesChart.SugarValues, 84)
-		//}
 
 	}
 
