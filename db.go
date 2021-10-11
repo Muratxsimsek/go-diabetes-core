@@ -152,10 +152,14 @@ func GetDiabetesChart() (*DiabetesChart, error) {
 	collection := client.Database("diabetes").Collection("diabetes")
 
 	findOptions := options.Find()
+
 	findOptions.SetSort(bson.D{{"sugarDate", -1}})
 	//findOptions.SetLimit(2)
 
-	cursor, err := collection.Find(context.TODO(), bson.D{{}}, findOptions)
+	//cursor, err := collection.Find(context.TODO(), bson.D{{}}, findOptions)
+	cursor, err := collection.Find(context.TODO(), bson.M{"sugarDate": bson.M{
+		"$gte": primitive.NewDateTimeFromTime(time.Now().AddDate(0, 0, -10)),
+	}}, findOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
